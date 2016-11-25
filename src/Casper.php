@@ -62,35 +62,35 @@ class Casper
         return $this->path2casper;
     }
 
-        /**
-         * Set the Headers
-         *
-         * @param array $headers
-         */
-        public function setHeaders(array $headers)
-        {
-            $headersScript = "
+    /**
+     * Set the Headers
+     *
+     * @param array $headers
+     */
+    public function setHeaders(array $headers)
+    {
+        $headersScript = "
 casper.page.customHeaders = {
 ";
-            if (!empty($headers)) {
-                $headerLines = [];
-                foreach ($headers as $header => $value) {
-                    // Current version of casperjs will not decode gzipped output
-                    if ($header == 'Accept-Encoding') {
-                        continue;
-                    }
-                    $headerLine = "    '{$header}': '";
-                    $headerLine .= (is_array($value)) ? implode(',', $value) : $value;
-                    $headerLine .= "'";
-                    $headerLines[] = $headerLine;
+        if (!empty($headers)) {
+            $headerLines = [];
+            foreach ($headers as $header => $value) {
+                // Current version of casperjs will not decode gzipped output
+                if ($header == 'Accept-Encoding') {
+                    continue;
                 }
-                $headersScript .= implode(",\n", $headerLines)."\n";
+                $headerLine = "    '{$header}': '";
+                $headerLine .= (is_array($value)) ? implode(',', $value) : $value;
+                $headerLine .= "'";
+                $headerLines[] = $headerLine;
             }
-            $headersScript .= "};";
-            $this->_script .= $headersScript;
-
-            return $this;
+            $headersScript .= implode(",\n", $headerLines)."\n";
         }
+        $headersScript .= "};";
+        $this->_script .= $headersScript;
+
+        return $this;
+    }
 
     /**
      * Set the UserAgent
@@ -304,6 +304,28 @@ FRAGMENT;
         return $this;
     }
 
+
+    /**
+     * @param $selector
+     * @param $string
+     * @return $this
+     */
+    public function sendKeysByXpath($selector, $string)
+    {
+        $jsonData = json_encode($string);
+
+        $fragment = <<<FRAGMENT
+casper.then(function () {
+    this.sendKeys(xpath('$selector'), $jsonData);
+});
+
+FRAGMENT;
+
+        $this->script .= $fragment;
+
+        return $this;
+    }
+
     /**
      * wait until the text $text
      * appear on the page
@@ -366,13 +388,13 @@ FRAGMENT;
      *
      * @return \Browser\Casper
      */
-    public function waitForSelector($selector, $timeout = 5000)
+    public function waitForSelector($selector, $function = '', $timeout = 5000)
     {
         $fragment = <<<FRAGMENT
 casper.waitForSelector(
     '$selector',
     function () {
-        this.echo('found selector "$selector"');
+        $function
     },
     function () {
         this.echo('timeout occured');
@@ -643,9 +665,9 @@ FRAGMENT;
                 syslog(LOG_INFO, '[PHP-CASPERJS] ' . $outputLine);
             }
             if (strpos(
-                $outputLine,
-                $this->TAG_CURRENT_PAGE_CONTENT
-            ) !== false
+                    $outputLine,
+                    $this->TAG_CURRENT_PAGE_CONTENT
+                ) !== false
             ) {
                 $this->currentPageContent = str_replace(
                     $this->TAG_CURRENT_PAGE_CONTENT,
@@ -693,4 +715,5 @@ FRAGMENT;
     {
         return $this->loadTime;
     }
+
 }
