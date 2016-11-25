@@ -408,6 +408,25 @@ FRAGMENT;
     }
 
     /**
+     * @param string $xpath
+     * @return \Browser\Casper $this
+     */
+    public function clickByXpath($xpath)
+    {
+        $fragment = <<<FRAGMENT
+casper.then(function() {
+    this.click(xpath('$xpath'));
+});
+
+FRAGMENT;
+
+        $this->script .= $fragment;
+
+        return $this;
+
+    }
+
+    /**
      * take a screenshot of the page
      * area containing the selector
      *
