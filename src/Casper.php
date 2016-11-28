@@ -288,9 +288,13 @@ FRAGMENT;
      *
      * @return \Browser\Casper
      */
-    public function sendKeys($selector, $string)
+    public function sendKeys($selector, $string = null, $function = '')
     {
         $jsonData = json_encode($string);
+
+        if ($function) {
+            $jsonData = $function;
+        }
 
         $fragment = <<<FRAGMENT
 casper.then(function () {
