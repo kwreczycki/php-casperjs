@@ -611,7 +611,7 @@ FRAGMENT;
     {
         $fragment = <<<FRAGMENT
 casper.then(function() {
-    casper.waitForSelectorText(xpath('$selector'), $text, function() { $then }, function() { $onTimeout }, $timeout);
+    casper.waitForSelectorText(xpath('$selector'), "$text", function() { $then }, function() { $onTimeout }, $timeout);
 });
 FRAGMENT;
 
