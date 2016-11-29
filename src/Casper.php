@@ -607,11 +607,11 @@ FRAGMENT;
      * @param int $timeout
      * @return Casper
      */
-    public function waitForSelectorText($selector, $text, $then = '', $onTimeout = '', $timeout = 5000)
+    public function waitForSelectorTextByXpath($selector, $text, $then = '', $onTimeout = '', $timeout = 5000)
     {
         $fragment = <<<FRAGMENT
 casper.then(function() {
-    casper.waitForSelectorText($selector, $text, function() { $then }, function() { $onTimeout }, $timeout);
+    casper.waitForSelectorText(xpath('$selector'), $text, function() { $then }, function() { $onTimeout }, $timeout);
 });
 FRAGMENT;
 
