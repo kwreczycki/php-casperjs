@@ -202,6 +202,19 @@ var casper = require('casper').create({
     colorizerType: 'Dummy'
 });
 
+casper.waitForSelectorText = function(selector, text, then, onTimeout, timeout){
+    this.waitForSelector(selector, function _then() {
+        this.waitFor(function _check(){
+            var content = this.fetchText(selector);
+            if (utils.isRegExp(text)) {
+                return text.test(content);
+            }
+            return content.indexOf(text) !== -1;
+        }, then, onTimeout, timeout);
+    }, onTimeout, timeout);
+    return this;
+};
+
 casper.userAgent('$this->userAgent');
 casper.start().then(function() {
     this.open('$url', {
@@ -580,6 +593,47 @@ FRAGMENT;
         return $this;
     }
 
+    /**
+     * wait for selector text
+     *
+     * @param $selector
+     * @param $text
+     * @param $then
+     * @param $onTimeout
+     * @param int $timeout
+     * @return Casper
+     */
+    public function waitForSelectorText($selector, $text, $then, $onTimeout, $timeout = 5000)
+    {
+        $fragment = <<<FRAGMENT
+casper.then(function() {
+    casper.waitForSelectorText($selector, $text, function() { $then }, function() { $onTimeout }, $timeout);
+});
+FRAGMENT;
+
+        $this->script .= $fragment;
+
+        return $this;
+    }
+
+    /**
+     * @param $function
+     * @return $this
+     */
+    public function then($function)
+    {
+        $fragment = <<<FRAGMENT
+casper.then(function() {
+        $function
+    });
+});
+
+FRAGMENT;
+
+        $this->script .= $fragment;
+
+        return $this;
+    }
 
     public function evaluate($function)
     {
@@ -611,8 +665,6 @@ FRAGMENT;
 casper.then(function () {
     this.echo('$this->TAG_CURRENT_URL' + this.getCurrentUrl());
     this.echo('$this->TAG_CURRENT_TITLE' + this.getTitle());
-    this.echo('$this->TAG_CURRENT_PAGE_CONTENT' + this.getPageContent().replace(new RegExp('\\r?\\n','g'), ''));
-    this.echo('$this->TAG_CURRENT_HTML' + this.getHTML().replace(new RegExp('\\r?\\n','g'), ''));
 });
 
 casper.run();
