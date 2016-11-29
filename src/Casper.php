@@ -681,9 +681,6 @@ FRAGMENT;
         }
 
         exec($this->path2casper . 'casperjs ' . $filename . $options. ' >&2', $output);
-        if (empty($output)) {
-            throw new \Exception('Can not find CasperJS.');
-        }
 
         $this->setOutput($output);
         $this->processOutput();
