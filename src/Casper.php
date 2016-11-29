@@ -198,8 +198,7 @@ FRAGMENT;
 var xpath = require('casper').selectXPath;
 var casper = require('casper').create({
     verbose: true,
-    logLevel: 'debug',
-    colorizerType: 'Dummy'
+    logLevel: 'debug'
 });
 
 casper.waitForSelectorText = function(selector, text, then, onTimeout, timeout){
