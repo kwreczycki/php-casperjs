@@ -602,7 +602,7 @@ FRAGMENT;
      * @param int $timeout
      * @return Casper
      */
-    public function waitForSelectorText($selector, $text, $then, $onTimeout, $timeout = 5000)
+    public function waitForSelectorText($selector, $text, $then = '', $onTimeout = '', $timeout = 5000)
     {
         $fragment = <<<FRAGMENT
 casper.then(function() {
