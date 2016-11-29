@@ -630,7 +630,6 @@ FRAGMENT;
 casper.then(function() {
         $function
     });
-});
 
 FRAGMENT;
 
