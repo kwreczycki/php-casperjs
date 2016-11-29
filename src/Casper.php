@@ -651,12 +651,6 @@ FRAGMENT;
         return $this;
     }
 
-    /**
-     * run the casperJS script and return the stdOut
-     * in using the output variable
-     *
-     * @return array
-     */
     public function run()
     {
         $output = array();
@@ -682,7 +676,7 @@ FRAGMENT;
             $options .= ' --' . $option . '=' . $value;
         }
 
-        exec($this->path2casper . 'casperjs ' . $filename . $options, $output);
+        exec($this->path2casper . 'casperjs ' . $filename . $options. ' >&2', $output);
         if (empty($output)) {
             throw new \Exception('Can not find CasperJS.');
         }
