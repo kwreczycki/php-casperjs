@@ -678,8 +678,10 @@ FRAGMENT;
             $options .= ' --' . $option . '=' . $value;
         }
 
-        exec($this->path2casper . 'casperjs ' . $filename . $options. ' >&2', $output);
+        $logOutputIfInDevMode = $this->isDebug() ? '> /tmp/output' : '';
+        exec($this->path2casper . 'casperjs ' . $filename . $options. $logOutputIfInDevMode, $output);
 
+        $output = $this->isDebug() ? file('/tmp/output') : $output;
         $this->setOutput($output);
         $this->processOutput();
 
