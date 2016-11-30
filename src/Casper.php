@@ -1,5 +1,6 @@
 <?php
 namespace Browser;
+use Symfony\Component\Process\Process;
 
 /**
  * CasperJS wrapper
@@ -678,16 +679,24 @@ FRAGMENT;
             $options .= ' --' . $option . '=' . $value;
         }
 
-        $logOutputIfInDevMode = $this->isDebug() ? '> /tmp/output' : '';
-        exec($this->path2casper . 'casperjs ' . $filename . $options. $logOutputIfInDevMode, $output);
+        $process = new Process($this->path2casper . 'casperjs ' . $filename . $options);
+        if ($this->isDebug()) {
+            $process->run(function($type, $buffer) {
+                if (Process::ERR == $type) {
+                    echo 'ERR >'. $buffer;
+                } else {
+                    echo 'OUT >'. $buffer;
+                }
+            });
+        } else {
+            $process->run();
+        }
 
-        $output = $this->isDebug() ? file('/tmp/output') : $output;
-        $this->setOutput($output);
+        $this->setOutput(explode("\n", $process->getOutput()));
         $this->processOutput();
 
         unlink($filename);
-
-        return $output;
+        return $process;
     }
 
     /**
