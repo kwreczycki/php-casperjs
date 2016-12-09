@@ -34,6 +34,8 @@ class Casper
     private $tempDir = '/tmp';
     private $path2casper = '/usr/local/bin/'; //path to CasperJS
 
+    const TIMEOUT = 240;
+
     public function __construct($path2casper = null, $tempDir = null)
     {
         if ($path2casper) {
@@ -202,6 +204,8 @@ var casper = require('casper').create({
     verbose: true,
     logLevel: 'debug'
 });
+
+casper.options.waitTimeout = 10000;
 
 casper.waitForSelectorText = function(selector, text, then, onTimeout, timeout){
     this.waitForSelector(selector, function _then() {
@@ -654,16 +658,47 @@ FRAGMENT;
         return $this;
     }
 
+    public function waitForUrl($url, $then = '', $onTimeout = '', $timeout = 5000)
+    {
+        $fragment = <<<FRAGMENT
+casper.waitForUrl($url, $then, $onTimeout, $timeout);
+});
+
+FRAGMENT;
+
+        $this->script .= $fragment;
+
+        return $this;
+    }
+
+    public function waitWhileVisibleByXpath($selector)
+    {
+        $fragment = <<<FRAGMENT
+    casper.waitWhileVisible(xpath('$selector'));
+FRAGMENT;
+        $this->script .= $fragment;
+
+        return $this;
+    }
+
+    public function waitFor($function)
+    {
+        $fragment = <<<FRAGMENT
+    casper.waitFor($function);
+FRAGMENT;
+        $this->script .= $fragment;
+
+        return $this;
+    }
+
+
     public function run()
     {
-        $output = array();
-
         $fragment = <<<FRAGMENT
 casper.then(function () {
     this.echo('$this->TAG_CURRENT_URL' + this.getCurrentUrl());
     this.echo('$this->TAG_CURRENT_TITLE' + this.getTitle());
 });
-
 casper.run();
 
 FRAGMENT;
@@ -680,6 +715,8 @@ FRAGMENT;
         }
 
         $process = new Process($this->path2casper . 'casperjs ' . $filename . $options);
+        $process->setTimeout(self::TIMEOUT);
+
         if ($this->isDebug()) {
             $process->run(function($type, $buffer) {
                 if (Process::ERR == $type) {
