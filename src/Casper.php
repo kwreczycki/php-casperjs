@@ -788,6 +788,35 @@ FRAGMENT;
         }
     }
 
+    public function withFrame($selector)
+    {
+        $fragment = <<<FRAGMENT
+casper.then(function () {
+    var link_tmp = this.getElementInfo('$selector');
+    var link = link_tmp.attributes.src;
+    casper.open(link);
+});
+
+FRAGMENT;
+
+        $this->script .= $fragment;
+
+        return $this;
+    }
+
+    public function clearInputByXpath($selector)
+    {
+        $fragment = <<<FRAGMENT
+casper.then(function () {
+    casper.sendKeys(xpath('$selector'), {reset: true} );
+});
+
+FRAGMENT;
+        $this->script .= $fragment;
+
+        return $this;
+    }
+
     public function getCurrentUrl()
     {
         return $this->currentUrl;
