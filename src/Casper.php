@@ -205,7 +205,7 @@ var casper = require('casper').create({
     logLevel: 'debug'
 });
 
-casper.options.waitTimeout = 10000;
+casper.options.waitTimeout = 15000;
 
 casper.waitForSelectorText = function(selector, text, then, onTimeout, timeout){
     this.waitForSelector(selector, function _then() {
