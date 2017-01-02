@@ -201,12 +201,16 @@ FRAGMENT;
 var xpath = require('casper').selectXPath;
 var utils = require("utils");
 var myObj = {};
+var valueFromInputOptions = [];
 var casper = require('casper').create({
     verbose: true,
-    logLevel: 'debug'
+    logLevel: 'debug',
+    pageSettings: {
+        webSecurityEnabled: false
+    }
 });
-
-casper.options.waitTimeout = 15000;
+ 
+casper.options.waitTimeout = 25000;
 
 casper.waitForSelectorText = function(selector, text, then, onTimeout, timeout){
     this.waitForSelector(selector, function _then() {
