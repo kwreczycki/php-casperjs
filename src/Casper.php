@@ -221,6 +221,18 @@ casper.waitForSelectorText = function(selector, text, then, onTimeout, timeout){
     return this;
 };
 
+casper.on('error', function() {
+    var currentDate = new Date();
+    var dateTime = currentDate.getDate() + "-"
+        + (currentDate.getMonth()+1)  + "-" 
+        + currentDate.getFullYear() + "@"  
+        + currentDate.getHours() + ":"  
+        + currentDate.getMinutes() + ":" 
+        + currentDate.getSeconds();
+
+    this.capture("/var/www/var/cache/" + dateTime + ".png", { top: 0, left:0, width:1200, height: 2500});
+});
+
 casper.userAgent('$this->userAgent');
 casper.start().then(function() {
     this.open('$url', {
