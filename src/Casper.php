@@ -235,7 +235,7 @@ casper.on('error', function() {
         + currentDate.getMinutes() + ":" 
         + currentDate.getSeconds();
 
-    this.capture("/var/www/var/cache/$this->onErrorImage"- + dateTime + ".png", { top: 0, left:0, width:1200, height: 2500});
+    this.capture("/var/www/var/cache/$this->onErrorImage-" + dateTime + ".png", { top: 0, left:0, width:1200, height: 2500});
 });
 
 casper.userAgent('$this->userAgent');
