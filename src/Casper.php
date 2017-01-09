@@ -825,7 +825,7 @@ FRAGMENT;
     {
         $fragment = <<<FRAGMENT
 casper.then(function () {
-    casper.sendKeys(xpath('$selector'), {reset: true} );
+    casper.sendKeys(xpath('$selector'), "", {reset: true} );
 });
 
 FRAGMENT;
