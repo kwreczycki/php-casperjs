@@ -33,6 +33,7 @@ class Casper
     private $loadTime = '';
     private $tempDir = '/tmp';
     private $path2casper = '/usr/local/bin/'; //path to CasperJS
+    private $onErrorImage;
 
     const TIMEOUT = 240;
 
@@ -234,7 +235,7 @@ casper.on('error', function() {
         + currentDate.getMinutes() + ":" 
         + currentDate.getSeconds();
 
-    this.capture("/var/www/var/cache/" + dateTime + ".png", { top: 0, left:0, width:1200, height: 2500});
+    this.capture("/var/www/var/cache/$this->onErrorImage-" + dateTime + ".png", { top: 0, left:0, width:1200, height: 2500});
 });
 
 casper.userAgent('$this->userAgent');
@@ -749,7 +750,7 @@ FRAGMENT;
         $this->setOutput(explode("\n", $process->getOutput()));
         $this->processOutput();
 
-        unlink($filename);
+        //unlink($filename);
         return $process;
     }
 
@@ -875,4 +876,8 @@ FRAGMENT;
         return $this->loadTime;
     }
 
+    public function setOnErrorImage($imageName)
+    {
+        $this->onErrorImage = $imageName;
+    }
 }
