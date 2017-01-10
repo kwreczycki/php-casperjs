@@ -750,7 +750,7 @@ FRAGMENT;
         $this->setOutput(explode("\n", $process->getOutput()));
         $this->processOutput();
 
-        //unlink($filename);
+        unlink($filename);
         return $process;
     }
 
