@@ -848,7 +848,7 @@ casper.then(function () {
 });
 
 FRAGMENT;
-        $this->casperBrowser->then($fragment);
+        $this->script .= $fragment;
 
         return $this;
     }
