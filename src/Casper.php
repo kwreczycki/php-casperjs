@@ -840,13 +840,15 @@ FRAGMENT;
         $fragment = <<<FRAGMENT
 
 casper.then(function () {
-    if ((xpath('$selector').checked)) {
+    var checkboxElement = casper.getElementsInfo(xpath('$selector'))[0];
+    
+    if (false == checkboxElement.attributes.hasOwnProperty('checked')) {
         this.click(xpath('$selector'));
     }
 });
 
 FRAGMENT;
-        $this->script .= $fragment;
+        $this->casperBrowser->then($fragment);
 
         return $this;
     }
