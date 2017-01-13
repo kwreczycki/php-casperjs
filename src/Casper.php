@@ -853,6 +853,19 @@ FRAGMENT;
         return $this;
     }
 
+    public function pageReload()
+    {
+        $fragment = <<<FRAGMENT
+
+    casper.waitUntilVisible('body');
+    casper.waitForSelector('body');
+
+FRAGMENT;
+        $this->script .= $fragment;
+
+        return $this;
+    }
+
     public function getCurrentUrl()
     {
         return $this->currentUrl;
